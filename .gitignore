@@ -1,0 +1,28 @@
+# dependências
+node_modules/
+
+# builds
+dist/
+lib/
+coverage/
+
+# env
+.env
+.env.*
+!.env.example
+
+# firebase
+.firebase/
+*-debug.log*
+emulator-data/
+
+# logs e sistema
+*.log
+.DS_Store
+Thumbs.db
+
+# editores
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/

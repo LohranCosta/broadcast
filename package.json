@@ -1,0 +1,16 @@
+{
+  "name": "unnichat-broadcast",
+  "private": true,
+  "description": "Broadcast multi-tenant com React, Firebase e Cloud Functions",
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.9"
+  }
+}
