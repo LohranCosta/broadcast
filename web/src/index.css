@@ -1,3 +1,14 @@
-body {
-  margin: 0;
+@layer theme, base, mui, components, utilities;
+@import 'tailwindcss';
+
+/* As cores do Tailwind apontam para as variáveis do tema do MUI (fonte única de verdade) */
+@theme inline {
+  --color-primary: var(--mui-palette-primary-main);
+  --color-primary-dark: var(--mui-palette-primary-dark);
+  --color-primary-light: var(--mui-palette-primary-light);
+  --color-canvas: var(--mui-palette-background-default);
+  --color-surface: var(--mui-palette-background-paper);
+  --color-muted: var(--mui-palette-text-secondary);
+  --color-border: var(--mui-palette-divider);
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
 }
