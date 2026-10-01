@@ -1,8 +1,9 @@
 {
-  "name": "unnichat-broadcast",
+  "name": "broadcast",
   "private": true,
   "description": "Broadcast multi-tenant com React, Firebase e Cloud Functions",
   "scripts": {
+    "emulators": "firebase emulators:start --project demo-broadcast",
     "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

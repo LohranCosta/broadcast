@@ -1,0 +1,10 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Tudo fechado por padrão, cada coleção libera só o necessário
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
