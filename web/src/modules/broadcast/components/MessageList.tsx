@@ -17,6 +17,8 @@ type MessageListProps = {
   loading: boolean
   error: Error | null
   contactNames: Map<string, string>
+  onEdit: (message: Message) => void
+  onDelete: (message: Message) => void
 }
 
 const FILTERS: Array<{ value: MessageFilter; label: string }> = [
@@ -31,7 +33,14 @@ const EMPTY_TEXT: Record<MessageFilter, string> = {
   scheduled: 'Nenhuma mensagem agendada no momento.',
 }
 
-export function MessageList({ messages, loading, error, contactNames }: MessageListProps) {
+export function MessageList({
+  messages,
+  loading,
+  error,
+  contactNames,
+  onEdit,
+  onDelete,
+}: MessageListProps) {
   const [filter, setFilter] = useAtom(messageFilterAtom)
 
   const namesOf = (message: Message) =>
@@ -80,7 +89,13 @@ export function MessageList({ messages, loading, error, contactNames }: MessageL
       ) : (
         <div className="flex flex-col gap-3">
           {messages.map((message) => (
-            <MessageCard key={message.id} message={message} recipientNames={namesOf(message)} />
+            <MessageCard
+              key={message.id}
+              message={message}
+              recipientNames={namesOf(message)}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
           ))}
         </div>
       )}
