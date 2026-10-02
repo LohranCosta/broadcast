@@ -78,5 +78,40 @@ service cloud.firestore {
 
       allow delete: if isOwner(resource.data);
     }
+
+    function isValidMessage(data) {
+      return isText(data.content, 1, 1000)
+        && data.contactIds is list
+        && data.contactIds.size() > 0
+        && data.contactIds.size() <= 500
+        && (
+          (data.status == 'sent' && data.sentAt == request.time && data.scheduledAt == null)
+          || (data.status == 'scheduled'
+            && data.scheduledAt is timestamp
+            && data.scheduledAt > request.time
+            && data.sentAt == null)
+        );
+    }
+
+    match /messages/{messageId} {
+      allow read: if isOwner(resource.data);
+
+      allow create: if isOwner(request.resource.data)
+        && hasExactly([
+          'clientId', 'connectionId', 'contactIds', 'content', 'status',
+          'scheduledAt', 'sentAt', 'createdAt', 'updatedAt'
+        ])
+        && isValidMessage(request.resource.data)
+        && ownsConnection(request.resource.data.connectionId)
+        && isNew();
+
+      allow update: if isOwner(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['contactIds', 'content', 'status', 'scheduledAt', 'sentAt', 'updatedAt'])
+        && isValidMessage(request.resource.data)
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if isOwner(resource.data);
+    }
   }
 }

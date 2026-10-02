@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 
 import { LoginPage } from '@modules/auth/pages/LoginPage'
 import { SignUpPage } from '@modules/auth/pages/SignUpPage'
+import { BroadcastPage } from '@modules/broadcast/pages/BroadcastPage'
 import { ConnectionPage } from '@modules/connections/pages/ConnectionPage'
 import { ConnectionsPage } from '@modules/connections/pages/ConnectionsPage'
 import { ContactsPage } from '@modules/contacts/pages/ContactsPage'
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
             children: [
               { index: true, element: <Navigate to="contatos" replace /> },
               { path: 'contatos', element: <ContactsPage /> },
+              { path: 'broadcast', element: <BroadcastPage /> },
             ],
           },
         ],
