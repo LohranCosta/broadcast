@@ -2,9 +2,28 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Tudo fechado por padrão, cada coleção libera só o necessário
-    match /{document=**} {
-      allow read, write: if false;
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasExactly(fields) {
+      return request.resource.data.keys().hasAll(fields)
+        && request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isText(value, min, max) {
+      return value is string && value.size() >= min && value.size() <= max;
+    }
+
+    match /clients/{clientId} {
+      allow read: if isSignedIn() && request.auth.uid == clientId;
+
+      allow create: if isSignedIn()
+        && request.auth.uid == clientId
+        && hasExactly(['name', 'email', 'createdAt'])
+        && isText(request.resource.data.name, 2, 80)
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.createdAt == request.time;
     }
   }
 }
