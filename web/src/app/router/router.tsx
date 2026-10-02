@@ -7,10 +7,12 @@ import { ROUTES } from '@shared/constants/routes'
 import { PrivateRoute } from './guards/PrivateRoute'
 import { PublicOnlyRoute } from './guards/PublicOnlyRoute'
 import { PrivateLayout } from './layouts/PrivateLayout'
+import { RouteError } from './RouteError'
 
 export const router = createBrowserRouter([
   {
     hydrateFallbackElement: <PageLoader />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <PublicOnlyRoute />,
