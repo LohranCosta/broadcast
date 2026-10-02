@@ -1,7 +1,17 @@
 export const onlyDigits = (value: string) => value.replace(/\D/g, '')
 
+const BRAZIL_COUNTRY_CODE = '55'
+
+const nationalDigits = (value: string) => {
+  const digits = onlyDigits(value)
+  const hasCountryCode =
+    digits.startsWith(BRAZIL_COUNTRY_CODE) && (value.trim().startsWith('+') || digits.length > 12)
+
+  return hasCountryCode ? digits.slice(BRAZIL_COUNTRY_CODE.length) : digits
+}
+
 export function formatPhone(value: string) {
-  const digits = onlyDigits(value).slice(0, 11)
+  const digits = nationalDigits(value).slice(0, 11)
 
   if (digits.length === 0) return ''
   if (digits.length <= 2) return `(${digits}`

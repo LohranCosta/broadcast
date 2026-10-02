@@ -27,6 +27,17 @@ describe('formatPhone', () => {
     expect(formatPhone('119123456789999')).toBe('(11) 91234-5678')
   })
 
+  it('remove o código do país de um número colado', () => {
+    expect(formatPhone('+55 11 91234-5678')).toBe('(11) 91234-5678')
+    expect(formatPhone('+55 (11) 3333-4444')).toBe('(11) 3333-4444')
+    expect(formatPhone('5511912345678')).toBe('(11) 91234-5678')
+  })
+
+  it('mantém o DDD 55 de quem digita o número', () => {
+    expect(formatPhone('55999998888')).toBe('(55) 99999-8888')
+    expect(formatPhone('(55) 99999-88881')).toBe('(55) 99999-8888')
+  })
+
   it('retorna vazio sem dígitos', () => {
     expect(formatPhone('abc')).toBe('')
   })
