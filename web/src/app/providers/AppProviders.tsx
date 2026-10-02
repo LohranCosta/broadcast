@@ -11,7 +11,6 @@ type AppProvidersProps = {
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    // enableCssLayer coloca os estilos do MUI na layer "mui", assim as utilities do Tailwind sempre vencem
     <StyledEngineProvider enableCssLayer>
       <GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
       <ThemeProvider theme={theme}>

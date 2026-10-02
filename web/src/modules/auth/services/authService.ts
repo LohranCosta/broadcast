@@ -27,7 +27,6 @@ export async function signIn({ email, password }: SignInInput) {
   await signInWithEmailAndPassword(auth, email, password)
 }
 
-// Cada usuário cadastrado é um cliente da aplicação: o doc clients/{uid} representa o tenant
 export async function signUp({ name, email, password }: SignUpInput): Promise<SessionUser> {
   const { user } = await createUserWithEmailAndPassword(auth, email, password)
 

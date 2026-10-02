@@ -5,7 +5,6 @@ import type { Session } from '../types'
 
 export const sessionAtom = atom<Session>({ status: 'loading' })
 
-// Só escuta o Firebase Auth enquanto existir algum componente usando a sessão
 sessionAtom.onMount = (setSession) =>
   observeAuthState((user) =>
     setSession(user ? { status: 'authenticated', user } : { status: 'unauthenticated' }),

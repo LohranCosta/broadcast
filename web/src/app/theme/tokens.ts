@@ -1,4 +1,3 @@
-// Paleta baseada no verde usado no app da Unnichat
 export const brand = {
   green: '#1F775E',
   greenDark: '#1B5846',
