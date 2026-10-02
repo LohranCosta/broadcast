@@ -6,12 +6,14 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore'
 import { afterAll, afterEach, beforeAll, describe, it } from 'vitest'
@@ -80,5 +82,28 @@ describe('regras de connections', () => {
 
     await assertFails(getDoc(doc(dbAs('ana'), 'connections/c2')))
     await assertFails(getDoc(doc(env.unauthenticatedContext().firestore(), 'connections/c2')))
+  })
+
+  it('edita só o nome das próprias conexões', async () => {
+    await seedConnection('c1', 'ana')
+    const connection = doc(dbAs('ana'), 'connections/c1')
+
+    await assertSucceeds(updateDoc(connection, { name: 'Suporte', updatedAt: serverTimestamp() }))
+    await assertFails(updateDoc(connection, { name: '', updatedAt: serverTimestamp() }))
+    await assertFails(updateDoc(connection, { clientId: 'bia', updatedAt: serverTimestamp() }))
+  })
+
+  it('exclui as próprias conexões', async () => {
+    await seedConnection('c1', 'ana')
+
+    await assertSucceeds(deleteDoc(doc(dbAs('ana'), 'connections/c1')))
+  })
+
+  it('não edita nem exclui conexão de outro cliente', async () => {
+    await seedConnection('c2', 'bia')
+    const connection = doc(dbAs('ana'), 'connections/c2')
+
+    await assertFails(updateDoc(connection, { name: 'Invasão', updatedAt: serverTimestamp() }))
+    await assertFails(deleteDoc(connection))
   })
 })

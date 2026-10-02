@@ -42,6 +42,13 @@ service cloud.firestore {
         && hasExactly(['clientId', 'name', 'createdAt', 'updatedAt'])
         && isText(request.resource.data.name, 1, 60)
         && isNew();
+
+      allow update: if isOwner(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'updatedAt'])
+        && isText(request.resource.data.name, 1, 60)
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if isOwner(resource.data);
     }
   }
 }

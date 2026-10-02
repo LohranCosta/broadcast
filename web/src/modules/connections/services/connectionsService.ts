@@ -1,4 +1,14 @@
-import { addDoc, collection, orderBy, query, serverTimestamp, where } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  orderBy,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
 
 import { COLLECTIONS } from '@lib/collections'
 import { db } from '@lib/firebase'
@@ -32,3 +42,8 @@ export const createConnection = (clientId: string, { name }: ConnectionInput) =>
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   })
+
+export const updateConnection = (connectionId: string, { name }: ConnectionInput) =>
+  updateDoc(doc(connections, connectionId), { name, updatedAt: serverTimestamp() })
+
+export const deleteConnection = (connectionId: string) => deleteDoc(doc(connections, connectionId))
