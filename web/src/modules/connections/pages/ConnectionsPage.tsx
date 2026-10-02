@@ -110,7 +110,7 @@ export function ConnectionsPage() {
       <ConfirmDialog
         open={deleteDialog.isOpen}
         title="Excluir conexão"
-        description={`A conexão "${deleteDialog.item?.name}" será excluída. Essa ação não pode ser desfeita.`}
+        description={`A conexão "${deleteDialog.item?.name}" será excluída junto com todos os contatos e mensagens dela. Essa ação não pode ser desfeita.`}
         confirmLabel="Excluir"
         loading={deleting}
         onConfirm={handleDelete}

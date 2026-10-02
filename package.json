@@ -3,7 +3,7 @@
   "private": true,
   "description": "Broadcast multi-tenant com React, Firebase e Cloud Functions",
   "scripts": {
-    "emulators": "firebase emulators:start --project demo-broadcast",
+    "emulators": "npm run build --prefix functions && firebase emulators:start --project demo-broadcast",
     "test:rules": "firebase emulators:exec --only firestore --project demo-broadcast \"vitest run\"",
     "prepare": "husky",
     "format": "prettier --write .",
