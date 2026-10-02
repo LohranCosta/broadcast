@@ -6,7 +6,9 @@ import Paper from '@mui/material/Paper'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { memo } from 'react'
+import { Link as RouterLink } from 'react-router'
 
+import { ROUTES } from '@shared/constants/routes'
 import { formatDate } from '@shared/utils/formatDate'
 
 import type { Connection } from '../types'
@@ -24,17 +26,24 @@ export const ConnectionCard = memo(function ConnectionCard({
 }: ConnectionCardProps) {
   return (
     <Paper className="flex items-center gap-3 rounded-2xl border border-border p-5">
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
-        <LinkRoundedIcon />
-      </span>
-      <div className="min-w-0 flex-1">
-        <Typography className="truncate font-semibold">{connection.name}</Typography>
-        {connection.createdAt && (
-          <Typography className="text-xs text-muted">
-            Criada em {formatDate(connection.createdAt)}
+      <RouterLink
+        to={ROUTES.contacts(connection.id)}
+        className="flex min-w-0 flex-1 items-center gap-3 text-inherit no-underline"
+      >
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+          <LinkRoundedIcon />
+        </span>
+        <div className="min-w-0">
+          <Typography className="truncate font-semibold hover:text-primary">
+            {connection.name}
           </Typography>
-        )}
-      </div>
+          {connection.createdAt && (
+            <Typography className="text-xs text-muted">
+              Criada em {formatDate(connection.createdAt)}
+            </Typography>
+          )}
+        </div>
+      </RouterLink>
       <div className="flex shrink-0">
         <Tooltip title="Editar">
           <IconButton size="small" aria-label="Editar" onClick={() => onEdit(connection)}>

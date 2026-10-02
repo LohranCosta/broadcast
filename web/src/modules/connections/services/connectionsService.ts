@@ -12,7 +12,7 @@ import {
 
 import { COLLECTIONS } from '@lib/collections'
 import { db } from '@lib/firebase'
-import { createReadConverter, fromQuery, toDate } from '@lib/firestore'
+import { createReadConverter, fromDocument, fromQuery, toDate } from '@lib/firestore'
 
 import type { ConnectionInput } from '../schemas/connectionSchema'
 import type { Connection } from '../types'
@@ -47,3 +47,6 @@ export const updateConnection = (connectionId: string, { name }: ConnectionInput
   updateDoc(doc(connections, connectionId), { name, updatedAt: serverTimestamp() })
 
 export const deleteConnection = (connectionId: string) => deleteDoc(doc(connections, connectionId))
+
+export const observeConnection = (connectionId: string) =>
+  fromDocument(doc(connections, connectionId).withConverter(connectionConverter))

@@ -19,6 +19,11 @@ service cloud.firestore {
       return isSignedIn() && data.clientId == request.auth.uid;
     }
 
+    function ownsConnection(connectionId) {
+      return get(/databases/$(database)/documents/connections/$(connectionId)).data.clientId
+        == request.auth.uid;
+    }
+
     function isNew() {
       return request.resource.data.createdAt == request.time
         && request.resource.data.updatedAt == request.time;
@@ -46,6 +51,29 @@ service cloud.firestore {
       allow update: if isOwner(resource.data)
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'updatedAt'])
         && isText(request.resource.data.name, 1, 60)
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if isOwner(resource.data);
+    }
+
+    function isValidContact(data) {
+      return isText(data.name, 1, 80)
+        && data.phone is string
+        && data.phone.matches('^[0-9]{10,11}$');
+    }
+
+    match /contacts/{contactId} {
+      allow read: if isOwner(resource.data);
+
+      allow create: if isOwner(request.resource.data)
+        && hasExactly(['clientId', 'connectionId', 'name', 'phone', 'createdAt', 'updatedAt'])
+        && isValidContact(request.resource.data)
+        && ownsConnection(request.resource.data.connectionId)
+        && isNew();
+
+      allow update: if isOwner(resource.data)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name', 'phone', 'updatedAt'])
+        && isValidContact(request.resource.data)
         && request.resource.data.updatedAt == request.time;
 
       allow delete: if isOwner(resource.data);
