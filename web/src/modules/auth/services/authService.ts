@@ -33,7 +33,7 @@ export async function signUp({ name, email, password }: SignUpInput): Promise<Se
   await updateProfile(user, { displayName: name })
   await setDoc(doc(db, COLLECTIONS.clients, user.uid), {
     name,
-    email,
+    email: user.email ?? email,
     createdAt: serverTimestamp(),
   })
 
