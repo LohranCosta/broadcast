@@ -21,6 +21,12 @@ describe('messageSchema', () => {
     ])
   })
 
+  it('respeita o limite de destinatários das regras', () => {
+    const contactIds = Array.from({ length: 501 }, (_, index) => `c${index}`)
+
+    expect(errorsOf({ ...base, contactIds })).toEqual(['Selecione no máximo 500 contatos'])
+  })
+
   it('exige data ao agendar', () => {
     expect(errorsOf({ ...base, mode: 'schedule' })).toEqual(['Escolha a data e o horário do envio'])
   })

@@ -1,10 +1,14 @@
 import { z } from 'zod'
 
 export const MESSAGE_MAX_LENGTH = 1000
+export const MESSAGE_MAX_RECIPIENTS = 500
 
 export const messageSchema = z
   .object({
-    contactIds: z.array(z.string()).min(1, 'Selecione pelo menos um contato'),
+    contactIds: z
+      .array(z.string())
+      .min(1, 'Selecione pelo menos um contato')
+      .max(MESSAGE_MAX_RECIPIENTS, `Selecione no máximo ${MESSAGE_MAX_RECIPIENTS} contatos`),
     content: z
       .string()
       .trim()
