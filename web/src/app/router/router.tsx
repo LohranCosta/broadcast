@@ -1,11 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 
-import { LoginPage } from '@modules/auth/pages/LoginPage'
-import { SignUpPage } from '@modules/auth/pages/SignUpPage'
-import { BroadcastPage } from '@modules/broadcast/pages/BroadcastPage'
-import { ConnectionPage } from '@modules/connections/pages/ConnectionPage'
-import { ConnectionsPage } from '@modules/connections/pages/ConnectionsPage'
-import { ContactsPage } from '@modules/contacts/pages/ContactsPage'
+import { PageLoader } from '@shared/components/atoms/PageLoader'
 import { AuthLayout } from '@shared/components/templates/AuthLayout'
 import { ROUTES } from '@shared/constants/routes'
 
@@ -15,41 +10,77 @@ import { PrivateLayout } from './layouts/PrivateLayout'
 
 export const router = createBrowserRouter([
   {
-    element: <PublicOnlyRoute />,
+    hydrateFallbackElement: <PageLoader />,
     children: [
       {
-        element: (
-          <AuthLayout>
-            <Outlet />
-          </AuthLayout>
-        ),
+        element: <PublicOnlyRoute />,
         children: [
-          { path: ROUTES.login, element: <LoginPage /> },
-          { path: ROUTES.signUp, element: <SignUpPage /> },
-        ],
-      },
-    ],
-  },
-  {
-    element: <PrivateRoute />,
-    children: [
-      {
-        element: <PrivateLayout />,
-        children: [
-          { index: true, element: <Navigate to={ROUTES.connections} replace /> },
-          { path: ROUTES.connections, element: <ConnectionsPage /> },
           {
-            path: ROUTES.connection,
-            element: <ConnectionPage />,
+            element: (
+              <AuthLayout>
+                <Outlet />
+              </AuthLayout>
+            ),
             children: [
-              { index: true, element: <Navigate to="contatos" replace /> },
-              { path: 'contatos', element: <ContactsPage /> },
-              { path: 'broadcast', element: <BroadcastPage /> },
+              {
+                path: ROUTES.login,
+                lazy: async () => ({
+                  Component: (await import('@modules/auth/pages/LoginPage')).LoginPage,
+                }),
+              },
+              {
+                path: ROUTES.signUp,
+                lazy: async () => ({
+                  Component: (await import('@modules/auth/pages/SignUpPage')).SignUpPage,
+                }),
+              },
             ],
           },
         ],
       },
+      {
+        element: <PrivateRoute />,
+        children: [
+          {
+            element: <PrivateLayout />,
+            children: [
+              { index: true, element: <Navigate to={ROUTES.connections} replace /> },
+              {
+                path: ROUTES.connections,
+                lazy: async () => ({
+                  Component: (await import('@modules/connections/pages/ConnectionsPage'))
+                    .ConnectionsPage,
+                }),
+              },
+              {
+                path: ROUTES.connection,
+                lazy: async () => ({
+                  Component: (await import('@modules/connections/pages/ConnectionPage'))
+                    .ConnectionPage,
+                }),
+                children: [
+                  { index: true, element: <Navigate to="contatos" replace /> },
+                  {
+                    path: 'contatos',
+                    lazy: async () => ({
+                      Component: (await import('@modules/contacts/pages/ContactsPage'))
+                        .ContactsPage,
+                    }),
+                  },
+                  {
+                    path: 'broadcast',
+                    lazy: async () => ({
+                      Component: (await import('@modules/broadcast/pages/BroadcastPage'))
+                        .BroadcastPage,
+                    }),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      { path: '*', element: <Navigate to={ROUTES.home} replace /> },
     ],
   },
-  { path: '*', element: <Navigate to={ROUTES.home} replace /> },
 ])
