@@ -15,6 +15,15 @@ service cloud.firestore {
       return value is string && value.size() >= min && value.size() <= max;
     }
 
+    function isOwner(data) {
+      return isSignedIn() && data.clientId == request.auth.uid;
+    }
+
+    function isNew() {
+      return request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time;
+    }
+
     match /clients/{clientId} {
       allow read: if isSignedIn() && request.auth.uid == clientId;
 
@@ -24,6 +33,15 @@ service cloud.firestore {
         && isText(request.resource.data.name, 2, 80)
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.createdAt == request.time;
+    }
+
+    match /connections/{connectionId} {
+      allow read: if isOwner(resource.data);
+
+      allow create: if isOwner(request.resource.data)
+        && hasExactly(['clientId', 'name', 'createdAt', 'updatedAt'])
+        && isText(request.resource.data.name, 1, 60)
+        && isNew();
     }
   }
 }
